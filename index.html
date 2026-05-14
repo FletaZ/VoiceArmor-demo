@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoiceArmor: Proactive Defense Against Voice Cloning</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background: #f7f8fa;
+      color: #222;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 42px 22px 70px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 42px;
+    }
+
+    h1 {
+      font-size: 2.1rem;
+      line-height: 1.25;
+      margin: 0 0 16px;
+      font-weight: 700;
+    }
+
+    .authors {
+      font-size: 1rem;
+      color: #444;
+      margin-bottom: 26px;
+    }
+
+    .section {
+      background: #fff;
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 26px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.45rem;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 8px;
+    }
+
+    h3 {
+      margin-top: 0;
+      font-size: 1.15rem;
+    }
+
+    .abstract {
+      text-align: justify;
+    }
+
+    .speaker-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 28px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .speaker-meta {
+      margin: 8px 0 18px;
+      color: #444;
+      font-size: 0.96rem;
+    }
+
+    .prompt {
+      background: #f1f5f9;
+      border-left: 4px solid #64748b;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin: 14px 0 20px;
+      font-size: 0.96rem;
+    }
+
+    .audio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .audio-box {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 14px;
+      background: #fbfbfc;
+    }
+
+    .audio-title {
+      font-weight: 600;
+      font-size: 0.94rem;
+      margin-bottom: 8px;
+    }
+
+    .audio-note {
+      color: #666;
+      font-size: 0.86rem;
+      margin-bottom: 8px;
+    }
+
+    audio {
+      width: 100%;
+      height: 38px;
+    }
+
+    .subheading {
+      font-weight: 700;
+      margin-top: 24px;
+      margin-bottom: 8px;
+      color: #222;
+    }
+
+    footer {
+      text-align: center;
+      color: #777;
+      font-size: 0.88rem;
+      margin-top: 40px;
+    }
+
+    code {
+      background: #f1f5f9;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>VoiceArmor: Proactive Defense Against Voice Cloning for Voice Privacy Protection</h1>
+      <div class="authors">
+        Yiwei Hu, Kuntharrgyal Khysru, Quecuo De, Di Jin, Jianguo Wei
+      </div>
+    </header>
+
+    <section class="section">
+      <h2>Abstract</h2>
+      <p class="abstract">
+        Zero-shot text-to-speech (TTS) and voice conversion (VC) models enable voice cloning from short reference speech, exposing publicly released speech to unauthorized speaker-identity misuse. Existing perturbation-based proactive defenses often depend on carefully tuned perceptual losses and remain vulnerable to post-release processing. We propose VoiceArmor, a proactive speech protection method that optimizes perturbations in the short-time Fourier transform (STFT) magnitude domain. VoiceArmor integrates heterogeneous surrogate speaker encoders, stochastic transformation augmentation, and an adaptive dynamic psychoacoustic projection constraint to support black-box transfer, transformation-aware optimization, and reference-speech imperceptibility without auxiliary perceptual loss balancing. Experiments on multiple zero-shot TTS and VC models show that VoiceArmor improves the imperceptibility of protected reference speech while maintaining competitive defense success rates under black-box transfer. Additional experiments on post-release purification, white-box evaluation, and ablations show that VoiceArmor prioritizes a quality-preserving protection trade-off rather than raw automatic speaker verification (ASV) rejection maximization.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Audio Samples</h2>
+      <p>
+        For each speaker, we provide the clean reference speech, the VoiceArmor-protected reference speech, and generated speech from three target models: XTTS, YourTTS, and OpenVoice. For each target model, we show speech generated using the protected reference speech. The goal is to show that the protected reference speech remains perceptually close to the original audio, while its use as speaker-conditioning input reduces the similarity of the generated speech to the original speaker identity.
+      </p>
+      <p>
+        We include two male and two female speakers. The examples are intended to illustrate the quality--protection trade-off of VoiceArmor rather than to maximize raw automatic speaker verification rejection. For OpenVoice conversion, we also provide the corresponding source speech, whose filename starts with <code>source_</code>. These source utterances are generated from the same fixed text pool used in the TTS experiments with Microsoft Edge TTS <code>en-US-AriaNeural</code>, and are converted to 16 kHz WAV format as inputs to the VC model.
+      </p>
+    </section>
+
+    <main id="demo-root"></main>
+
+    <footer>
+      VoiceArmor audio demo page.
+    </footer>
+  </div>
+
+  <script>
+    const speakers = [
+      {
+        id: "female1",
+        title: "Female Speaker 1",
+        gender: "Female",
+        prompt: "I highly recommend you install this free software.",
+        clean: "demo/female1/p339_002_clean.wav",
+        adv: "demo/female1/p339_002_adv.wav",
+        source: "demo/female1/source_12.wav",
+        xtts: "demo/female1/p339_002_mic1_tts_xtts.wav",
+        yourtts: "demo/female1/p339_002_mic1_tts_yourtts.wav",
+        openvoice: "demo/female1/p339_002_mic1_vc.wav"
+      },
+      {
+        id: "female2",
+        title: "Female Speaker 2",
+        gender: "Female",
+        prompt: "I have arrived at your house, please open the door.",
+        clean: "demo/female2/p314_025_clean.wav",
+        adv: "demo/female2/p314_025_adv.wav",
+        source: "demo/female2/source_10.wav",
+        xtts: "demo/female2/p314_025_mic1_tts_xtts.wav",
+        yourtts: "demo/female2/p314_025_mic1_tts_yourtts.wav",
+        openvoice: "demo/female2/p314_025_mic1_vc.wav"
+      },
+      {
+        id: "male1",
+        title: "Male Speaker 1",
+        gender: "Male",
+        prompt: "Help me recall my cell phone password.",
+        clean: "demo/male1/p227_014_clean.wav",
+        adv: "demo/male1/p227_014_adv.wav",
+        source: "demo/male1/source_11.wav",
+        xtts: "demo/male1/p227_014_mic1_tts_xtts.wav",
+        yourtts: "demo/male1/p227_014_mic1_tts_yourtts.wav",
+        openvoice: "demo/male1/p227_014_mic1_vc.wav"
+      },
+      {
+        id: "male2",
+        title: "Male Speaker 2",
+        gender: "Male",
+        prompt: "I have sent you the contract, please click the link to sign.",
+        clean: "demo/male2/p237_006_clean.wav",
+        adv: "demo/male2/p237_006_adv.wav",
+        source: "demo/male2/source_13.wav",
+        xtts: "demo/male2/p237_006_mic1_tts_xtts.wav",
+        yourtts: "demo/male2/p237_006_mic1_tts_yourtts.wav",
+        openvoice: "demo/male2/p237_006_mic1_vc.wav"
+      }
+    ];
+
+    function audioBox(title, note, src) {
+      return `
+        <div class="audio-box">
+          <div class="audio-title">${title}</div>
+          <div class="audio-note">${note}</div>
+          <audio controls preload="none">
+            <source src="${src}" type="audio/wav">
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      `;
+    }
+
+    function renderSpeaker(s) {
+      return `
+        <section class="speaker-card">
+          <h3>${s.title}</h3>
+          <div class="speaker-meta">Gender: ${s.gender}</div>
+
+          <div class="prompt">
+            <strong>Text prompt for XTTS / YourTTS:</strong> ${s.prompt}
+          </div>
+
+          <div class="subheading">Reference Speech</div>
+          <div class="audio-grid">
+            ${audioBox("Clean Reference Speech", "Original reference speech.", s.clean)}
+            ${audioBox("VoiceArmor-Protected Reference Speech", "Adversarially protected reference speech.", s.adv)}
+          </div>
+
+          <div class="subheading">Source Speech for OpenVoice VC</div>
+          <div class="audio-grid">
+            ${audioBox("OpenVoice Source Speech", "Source speech used as the content input for VC.", s.source)}
+          </div>
+
+          <div class="subheading">Generated Speech from Target Models</div>
+          <div class="audio-grid">
+            ${audioBox("XTTS", "Generated using the VoiceArmor-protected reference speech.", s.xtts)}
+            ${audioBox("YourTTS", "Generated using the VoiceArmor-protected reference speech.", s.yourtts)}
+            ${audioBox("OpenVoice", "Converted using the OpenVoice source speech and the VoiceArmor-protected reference speech.", s.openvoice)}
+          </div>
+        </section>
+      `;
+    }
+
+    document.getElementById("demo-root").innerHTML = speakers.map(renderSpeaker).join("");
+  </script>
+</body>
+</html>
